@@ -1,0 +1,80 @@
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    background-color: #f0f0f0;
+}
+
+.container {
+    text-align: center;
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+.settings {
+    margin-bottom: 20px;
+}
+
+#board {
+    display: inline-block;
+    position: relative;
+}
+
+.cell {
+    width: 30px;
+    height: 30px;
+    border: 1px solid #000;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    position: relative;
+}
+
+.cell.filled {
+    cursor: not-allowed;
+}
+
+.stone {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    z-index: 1;
+}
+
+.black {
+    background-color: #000;
+}
+
+.white {
+    background-color: #fff;
+    border: 1px solid #000;
+}
+
+.coordinate {
+    position: absolute;
+    font-size: 10px;
+    color: #666;
+}
+
+.coordinate-x {
+    bottom: -15px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.coordinate-y {
+    left: -15px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.win {
+    background-color: #ffeb3b !important;
+}
