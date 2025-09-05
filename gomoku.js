@@ -1,11 +1,12 @@
 // Gomoku Game Logic
 export class Gomoku {
-    constructor(size = 15) {
+    constructor(size = 15, winCount = 5) {
         this.size = size;
         this.board = Array(size).fill(null).map(() => Array(size).fill(0));
         this.currentPlayer = 1; // 1 for black, 2 for white
         this.gameOver = false;
         this.winner = null;
+        this.winCount = winCount;
     }
 
     placeStone(row, col) {
@@ -41,7 +42,7 @@ export class Gomoku {
             let winCells = [{ row: row, col: col }]; // store winning cells
 
             // Check in positive direction
-            for (let i = 1; i < 5; i++) {
+            for (let i = 1; i < this.winCount; i++) {
                 const r = row + dx * i;
                 const c = col + dy * i;
                 if (r >= 0 && r < this.size && c >= 0 && c < this.size && this.board[r][c] === player) {
@@ -53,7 +54,7 @@ export class Gomoku {
             }
 
             // Check in negative direction
-            for (let i = 1; i < 5; i++) {
+            for (let i = 1; i < this.winCount; i++) {
                 const r = row - dx * i;
                 const c = col - dy * i;
                 if (r >= 0 && r < this.size && c >= 0 && c < this.size && this.board[r][c] === player) {
@@ -64,7 +65,7 @@ export class Gomoku {
                 }
             }
 
-            if (count >= 5) {
+            if (count >= this.winCount) {
                 this.winCells = winCells; // store win cells for highlighting
                 return true;
             }

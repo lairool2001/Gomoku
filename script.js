@@ -6,10 +6,12 @@ const boardElement = document.getElementById('board');
 const gameInfoElement = document.getElementById('gameInfo');
 const startBtn = document.getElementById('startBtn');
 const boardSizeInput = document.getElementById('boardSize');
+const winCountInput = document.getElementById('winCount');
 
 // Game variables
 let game;
 let boardSize = 15;
+let winCount = 5;
 
 // Initialize game
 function initGame() {
@@ -18,9 +20,14 @@ function initGame() {
         alert('棋盤大小必須在3到1000之間');
         return;
     }
+    winCount = parseInt(winCountInput.value);
+    if (winCount < 3 || winCount > 100) {
+        alert('勝負連線數必須在3到100之間');
+        return;
+    }
 
     // Create new game instance
-    game = new Gomoku(boardSize);
+    game = new Gomoku(boardSize, winCount);
     renderBoard();
     updateGameInfo();
 }
@@ -57,23 +64,18 @@ function renderBoard() {
     for (let row = 0; row < boardSize; row++) {
         for (let col = 0; col <= boardSize; col++) { // <= to include Y coordinates
             // Add Y coordinate for first column
-            if (col <= 1) {
-                const cell = document.createElement('div');
-                cell.className = 'cell';
-                cell.style.visibility = 'visible';
-                boardContainer.appendChild(cell);
-                if (col == 0) {
-                    cell.style.visibility = 'hidden'; // Make it invisible but keep space
-                    continue; // Skip the top-left corner cell
-                }
-                const coord = document.createElement('div');
-                coord.className = 'coordinate coordinate-y';
-                coord.textContent = row + 1;
-                cell.appendChild(coord);
-                continue; // Skip the rest for coordinate cells
-            }
-            // Regular game cells
             const cell = document.createElement('div');
+            if (col <= 1) {
+                cell.className = 'cell';
+                if (col === 0) {
+                    cell.textContent = row + 1;
+                    cell.style.borderColor = "white"
+                    cell.style.visibility = 'visible';
+                    boardContainer.appendChild(cell);
+                    continue; // Skip the rest for coordinate cells
+                } else {
+                }
+            }
             cell.className = 'cell';
             cell.dataset.row = row;
             cell.dataset.col = col - 1; // Adjust for coordinate column

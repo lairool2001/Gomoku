@@ -1,17 +1,21 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>五子棋</title>
     <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
     <div class="container">
         <h1>五子棋</h1>
         <div class="settings">
-            <label for="boardSize">棋盤大小 (5-19):</label>
+            <label for="boardSize">棋盤大小 (3-1000):</label>
             <input type="number" id="boardSize" min="5" max="19" value="15">
+            <label for="winCount">勝負連線數(5-100)::</label>
+            <input type="number" id="winCount" min="3" max="100" value="5">
             <button id="startBtn">開始遊戲</button>
         </div>
         <div id="gameInfo"></div>
@@ -19,4 +23,5 @@
     </div>
     <script type="module" src="script.js"></script>
 </body>
+
 </html>
