@@ -1,24 +1,42 @@
 // Gomoku Game Logic
 export class Gomoku {
     constructor(size = 15, winCount = 5) {
+        // Validate parameters
+        if (size < 5 || size > 19) {
+            throw new Error('棋盤大小必須在5到19之間');
+        }
+        if (winCount < 3 || winCount > Math.min(10, size)) {
+            throw new Error('勝負連線數必須在3到' + Math.min(10, size) + '之間');
+        }
+        
         this.size = size;
         this.board = Array(size).fill(null).map(() => Array(size).fill(0));
         this.currentPlayer = 1; // 1 for black, 2 for white
         this.gameOver = false;
         this.winner = null;
         this.winCount = winCount;
+        this.winCells = null;
+        this.winDirection = null;
     }
 
     placeStone(row, col) {
+        // Validate position
+        if (row < 0 || row >= this.size || col < 0 || col >= this.size) {
+            return false;
+        }
+        
         if (this.gameOver || this.board[row][col] !== 0) {
             return false;
         }
 
         this.board[row][col] = this.currentPlayer;
 
-        if (this.checkWin(row, col)) {
+        const winResult = this.checkWin(row, col);
+        if (winResult) {
             this.gameOver = true;
             this.winner = this.currentPlayer;
+            this.winCells = winResult.cells;
+            this.winDirection = winResult.direction;
         } else if (this.isBoardFull()) {
             this.gameOver = true;
         } else {
@@ -31,10 +49,10 @@ export class Gomoku {
     checkWin(row, col) {
         const player = this.board[row][col];
         const directions = [
-            [0, 1],  // horizontal
-            [1, 0],  // vertical
-            [1, 1],  // diagonal /
-            [1, -1]  // diagonal \\
+            [0, 1],   // horizontal
+            [1, 0],   // vertical
+            [1, 1],   // diagonal /
+            [1, -1]   // diagonal \\
         ];
 
         for (let [dx, dy] of directions) {
@@ -66,12 +84,31 @@ export class Gomoku {
             }
 
             if (count >= this.winCount) {
-                this.winCells = winCells; // store win cells for highlighting
-                return true;
+                // Only keep the winning cells (remove extra cells if count > winCount)
+                if (winCells.length > this.winCount) {
+                    // Sort cells to keep only the consecutive ones
+                    if (dx === 0 && dy === 1) { // horizontal
+                        winCells.sort((a, b) => a.col - b.col);
+                    } else if (dx === 1 && dy === 0) { // vertical
+                        winCells.sort((a, b) => a.row - b.row);
+                    } else if (dx === 1 && dy === 1) { // diagonal /
+                        winCells.sort((a, b) => a.row - b.row);
+                    } else if (dx === 1 && dy === -1) { // diagonal \\
+                        winCells.sort((a, b) => a.row - b.row);
+                    }
+                    
+                    // Keep only the first winCount cells
+                    winCells = winCells.slice(0, this.winCount);
+                }
+                
+                return {
+                    cells: winCells,
+                    direction: { dx, dy }
+                };
             }
         }
 
-        return false;
+        return null;
     }
 
     isBoardFull() {
@@ -99,6 +136,10 @@ export class Gomoku {
 
     getWinner() {
         return this.winner;
+    }
+
+    getWinDirection() {
+        return this.winDirection;
     }
 }
 
